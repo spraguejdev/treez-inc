@@ -1,0 +1,19 @@
+{
+  "name": "treez-inc",
+  "version": "1.0.0",
+  "description": "Coding Challenge - Build a UI",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spraguejdev/treez-inc.git"
+  },
+  "author": "John Sprague",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/spraguejdev/treez-inc/issues"
+  },
+  "homepage": "https://github.com/spraguejdev/treez-inc#readme"
+}
