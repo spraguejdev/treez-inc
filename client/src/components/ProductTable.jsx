@@ -1,5 +1,5 @@
 var faker = require('faker');
-
+import React, { Component } from 'react';
 const UoM = ['each', 'g', 'I'];
 
 function getRandomInt(max) {
@@ -28,4 +28,15 @@ function createRecord(count) {
 }
 
 const records = createRecord(10);
-console.log(records);
+
+class ProductTable extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return <div>Hello World</div>;
+  }
+}
+
+export default ProductTable;
