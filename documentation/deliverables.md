@@ -19,3 +19,8 @@ I'm primarily mainly looking at look and feel, code readability, and 3rd party l
 > > Would you like me to use redux? This simple component is not a good use case to do so, but if you would like me to, that's fine.
 
 Render the rows in the ProductTable component
+
+## Todo July 4th
+
+> > Refactor product table to work
+> > style rows, look at documentation
