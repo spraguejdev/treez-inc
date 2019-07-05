@@ -52,7 +52,7 @@
 }
 .ReactVirtualized__Table__rowColumn {
   text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: wrap;
 }
 
 .ReactVirtualized__Table__headerColumn:first-of-type,
@@ -97,8 +97,8 @@
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  /* border: 1px solid rgb(59, 56, 56); */
-  padding: 4px;
+  border: 1px solid rgb(59, 56, 56);
+  margin-bottom: 20px;
 }
 
 html {
@@ -127,8 +127,8 @@ body {
   border-top: 1px solid rgb(59, 56, 56);
   color: #ff0;
 }
-
+/* 
 .table-row {
   border-top: 1px solid rgb(147, 147, 147);
   border-bottom: 1px solid rgb(147, 147, 147);
-}
+} */
