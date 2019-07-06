@@ -50,7 +50,7 @@ class ProductTable extends React.Component {
               headerHeight={40}
               width={width}
               height={500}
-              rowHeight={70}
+              rowHeight={60}
               rowCount={this.state.items.length}
               rowGetter={({ index }) => this.state.items[index]}
             >
