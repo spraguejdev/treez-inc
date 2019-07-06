@@ -42,7 +42,7 @@ class ProductTable extends React.Component {
   render() {
     return (
       <div className="container">
-        <h1>Autosize table example </h1>
+        <h1>Treez, Inc</h1>
         <AutoSizer>
           {({ width }) => (
             <Table
