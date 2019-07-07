@@ -124,24 +124,25 @@ body {
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  margin: 10px 0px 10px 0px;
+  padding: 5px;
+}
+
+.table-row {
+  border: 1px solid #c4c4c4;
+  height: 50px;
+  border-radius: 4px;
+  margin: 5px;
+}
+
+.ReactVirtualized__Table__row:nth-child(even) {
+  border-left: 7px solid rgba(4, 136, 4, 0.8);
+}
+
+.ReactVirtualized__Table__row:nth-child(odd) {
+  border-left: 7px solid rgba(25, 25, 250, 0.8);
 }
 
 .ReactVirtualized__Table__headerRow {
   border-top: 1px solid #c4c4c4;
   color: #272727;
-}
-
-.ReactVirtualized__Table__row:nth-child(even) {
-  border-left: 7px solid rgba(4, 136, 4, 0.8);
-  border: 1px solid #c4c4c4;
-  height: 50px;
-  border-radius: 4px;
-}
-
-.ReactVirtualized__Table__row:nth-child(odd) {
-  border-left: 7px solid rgba(25, 25, 250, 0.8);
-  border: 1px solid #c4c4c4;
-  height: 50px;
-  border-radius: 4px;
 }
