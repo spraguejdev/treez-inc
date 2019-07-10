@@ -19,6 +19,12 @@ I'm primarily mainly looking at look and feel, code readability, and 3rd party l
 > > Add functionality to sort??? <i class="fas fa-sort"></i>
 > > Add functionality for checkboxes
 
-## Notes
 
 "If I leave a data key off of column, it adds a sort icon???
+=======
+Render the rows in the ProductTable component
+
+## Todo July 4th
+
+> > Refactor product table to work
+> > style rows, look at documentation
