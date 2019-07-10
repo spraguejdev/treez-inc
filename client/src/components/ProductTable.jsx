@@ -9,6 +9,7 @@ const UoM = ['each', 'g', 'I'];
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
+const icons = ['fas fa-seedling', 'fab fa-pagelines', 'fas fa-tree', 'fas fa-oil-can'];
 
 // Generate an object containing our dummyData
 const generateRandomItem = idx => ({
@@ -22,7 +23,8 @@ const generateRandomItem = idx => ({
   price: '$' + faker.commerce.price(),
   baseCost: '$' + faker.commerce.price(),
   units: getRandomInt(300),
-  totalCost: '$60,000'
+  totalCost: '$60,000',
+  icon: icons[getRandomInt(4)]
 });
 
 class ProductTable extends React.Component {
@@ -37,6 +39,29 @@ class ProductTable extends React.Component {
     this.state = {
       items: items
     };
+
+    // this._headerRenderer = this._headerRenderer.bind(this);
+    this._renderDistributor = this._renderDistributor.bind(this);
+  }
+
+  _renderDistributor(data = TableCellProps) {
+    const { distributor, productName, icon } = data.rowData;
+
+    return (
+      <div>
+        <p className="distributor">
+          <i className={icon} style={{ float: 'left', fontSize: '20px', paddingTop: '5px' }}></i>
+          <span id="distName">{distributor}</span>
+          <br></br>
+          {productName}
+        </p>
+      </div>
+    );
+  }
+
+  _renderProductName(data = TableCellProps) {
+    const productName = data.rowData.productName;
+    return <div>{productName}</div>;
   }
 
   render() {
@@ -54,8 +79,12 @@ class ProductTable extends React.Component {
               rowCount={this.state.items.length}
               rowGetter={({ index }) => this.state.items[index]}
             >
-              <Column label="Distributor" dataKey="distributor" width={width * 0.45} />
-              <Column label="Product Name" dataKey="productName" width={width * 0.55} />
+              <Column
+                dataKey="distributor"
+                label="Distributor"
+                cellRenderer={this._renderDistributor}
+                width={width * 0.55}
+              />
               <Column width={width * 0.15} label="Size" dataKey="size" />
               <Column width={width * 0.15} label="UoM" dataKey="uom" />
               <Column width={width * 0.55} label="Package Label" dataKey="packageLabel" />
