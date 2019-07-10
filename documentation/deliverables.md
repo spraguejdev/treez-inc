@@ -11,11 +11,14 @@ I'm primarily mainly looking at look and feel, code readability, and 3rd party l
 > > Style the row to match picture!
 > > Find out how to make sections variable with an text input.
 
-## Questions to ask Dewey
+## ToDo 7/9
 
-> > What is the functionality for the Assign Column of the UI?
-> > What is the functionality for the checkBoxes?
-> > Would you like me to set up a database for data persistance and a GET request to fetch dummyData from it and a POST request to add data to it? If so, what database would you like me to use? Should I add a button to post data or another type of event?
-> > Would you like me to use redux? This simple component is not a good use case to do so, but if you would like me to, that's fine.
+> > Add functionality to delete a row
+> > Add functionality to insert a price (textbox)
+> > Add functionality to update item (enter click event)
+> > Add functionality to sort??? <i class="fas fa-sort"></i>
+> > Add functionality for checkboxes
 
-Render the rows in the ProductTable component
+## Notes
+
+"If I leave a data key off of column, it adds a sort icon???
