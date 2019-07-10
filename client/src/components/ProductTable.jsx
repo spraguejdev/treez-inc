@@ -1,15 +1,16 @@
 var faker = require('faker');
 import React, { Component } from 'react';
-import { Column, Table, AutoSizer } from 'react-virtualized';
+import { Column, Table, AutoSizer, SortDirection, SortIndicator } from 'react-virtualized';
+import { List } from 'react-virtualized/dist/commonjs/List';
 // import 'react-virtualized/styles.css'; // only needs to be imported once
 
 const UoM = ['each', 'g', 'I'];
+const icons = ['fas fa-seedling', 'fab fa-pagelines', 'fas fa-tree', 'fas fa-oil-can'];
 
 // Generate a random integer to use for dummy data
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
-const icons = ['fas fa-seedling', 'fab fa-pagelines', 'fas fa-tree', 'fas fa-oil-can'];
 
 // Generate an object containing our dummyData
 const generateRandomItem = idx => ({
@@ -28,22 +29,30 @@ const generateRandomItem = idx => ({
   action: 'fas fa-ellipsis-v'
 });
 
+let list = [];
+for (let i = 0, l = 10; i < l; i++) {
+  list.push(generateRandomItem(i));
+}
+
 class ProductTable extends React.Component {
-  constructor() {
-    super();
+  constructor(props, context) {
+    super(props, context);
 
     // Generate a list of of objects containing our dummy data
-    let items = [];
-    for (let i = 0, l = 10; i < l; i++) {
-      items.push(generateRandomItem(i));
-    }
+
     this.state = {
-      items: items
+      sortBy: 'packageLabel',
+      sortDirection: SortDirection.DESC,
+      sortedList: []
     };
 
-    // this._headerRenderer = this._headerRenderer.bind(this);
     this._renderDistributor = this._renderDistributor.bind(this);
     this._renderAssign = this._renderAssign.bind(this);
+    this._sort = this._sort.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({ sortedList: list });
   }
 
   _renderDistributor(data = TableCellProps) {
@@ -70,6 +79,15 @@ class ProductTable extends React.Component {
       </div>
     );
   }
+
+  _sort({ sortBy, sortDirection }) {
+    let sortedList = list.sort((a, b) => {
+      return a.packageLabel - b.packageLabel;
+    });
+    sortedList = sortDirection === SortDirection.DESC ? list.reverse() : list;
+    this.setState({ sortBy, sortDirection, sortedList });
+  }
+
   render() {
     return (
       <div className="container">
@@ -82,8 +100,11 @@ class ProductTable extends React.Component {
               width={width}
               height={500}
               rowHeight={60}
-              rowCount={this.state.items.length}
-              rowGetter={({ index }) => this.state.items[index]}
+              rowCount={this.state.sortedList.length}
+              rowGetter={({ index }) => this.state.sortedList[index]}
+              sort={this._sort}
+              sortBy={this.state.sortBy}
+              sortDirection={this.state.sortDirection}
             >
               <Column
                 dataKey="distributor"
@@ -93,7 +114,12 @@ class ProductTable extends React.Component {
               />
               <Column width={width * 0.15} label="Size" dataKey="size" />
               <Column width={width * 0.15} label="UoM" dataKey="uom" />
-              <Column width={width * 0.55} label="Package Label" dataKey="packageLabel" />
+              <Column
+                width={width * 0.55}
+                label="Package Label"
+                dataKey="packageLabel"
+                disableSort={false}
+              />
               <Column width={width * 0.3} label="Discount" dataKey="discount" />
               <Column width={width * 0.3} label="Fees" dataKey="fees" />
               <Column width={width * 0.3} label="Price" dataKey="price" />
