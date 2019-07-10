@@ -24,7 +24,8 @@ const generateRandomItem = idx => ({
   baseCost: '$' + faker.commerce.price(),
   units: getRandomInt(300),
   totalCost: '$60,000',
-  icon: icons[getRandomInt(4)]
+  icon: icons[getRandomInt(4)],
+  action: 'fas fa-ellipsis-v'
 });
 
 class ProductTable extends React.Component {
@@ -42,6 +43,7 @@ class ProductTable extends React.Component {
 
     // this._headerRenderer = this._headerRenderer.bind(this);
     this._renderDistributor = this._renderDistributor.bind(this);
+    this._renderAssign = this._renderAssign.bind(this);
   }
 
   _renderDistributor(data = TableCellProps) {
@@ -59,11 +61,15 @@ class ProductTable extends React.Component {
     );
   }
 
-  _renderProductName(data = TableCellProps) {
-    const productName = data.rowData.productName;
-    return <div>{productName}</div>;
+  _renderAssign(data = TableCellProps) {
+    const { action } = data.rowData;
+    return (
+      <div>
+        <i class="fas fa-sort" style={{ paddingRight: '20px' }}></i>
+        <i class={action} style={{ paddingRight: '10px' }}></i>
+      </div>
+    );
   }
-
   render() {
     return (
       <div className="container">
@@ -88,12 +94,18 @@ class ProductTable extends React.Component {
               <Column width={width * 0.15} label="Size" dataKey="size" />
               <Column width={width * 0.15} label="UoM" dataKey="uom" />
               <Column width={width * 0.55} label="Package Label" dataKey="packageLabel" />
-              <Column width={width * 0.35} label="Discount" dataKey="discount" />
-              <Column width={width * 0.35} label="Fees" dataKey="fees" />
-              <Column width={width * 0.35} label="Price" dataKey="price" />
-              <Column width={width * 0.35} label="Base Cost" dataKey="baseCost" />
+              <Column width={width * 0.3} label="Discount" dataKey="discount" />
+              <Column width={width * 0.3} label="Fees" dataKey="fees" />
+              <Column width={width * 0.3} label="Price" dataKey="price" />
+              <Column width={width * 0.3} label="Base Cost" dataKey="baseCost" />
               <Column width={width * 0.2} label="Units" dataKey="units" />
-              <Column width={width * 0.4} label="Total Cost" dataKey="totalCost" />
+              <Column width={width * 0.35} label="Total Cost" dataKey="totalCost" />
+              <Column
+                width={width * 0.2}
+                label="Action"
+                dataKey="action"
+                cellRenderer={this._renderAssign}
+              />
             </Table>
           )}
         </AutoSizer>
