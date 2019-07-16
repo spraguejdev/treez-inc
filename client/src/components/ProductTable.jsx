@@ -1,8 +1,35 @@
 var faker = require('faker');
 import React, { Component } from 'react';
-import { Column, Table, AutoSizer, SortDirection, SortIndicator } from 'react-virtualized';
-import { List } from 'react-virtualized/dist/commonjs/List';
-// import 'react-virtualized/styles.css'; // only needs to be imported once
+import {
+  AutoSizer,
+  Column,
+  Index,
+  Table,
+  TableProps,
+  TableRowProps,
+  WindowScroller,
+  defaultTableRowRenderer,
+  SortDirection
+} from 'react-virtualized';
+
+import {
+  SortableContainer,
+  SortableElement,
+  SortEnd,
+  SortEndHandler,
+  SortEvent
+} from 'react-sortable-hoc';
+
+import Checkbox from './Checkbox.jsx';
+import { defaultRowRenderer } from 'react-virtualized/dist/commonjs/Table';
+
+const SortableTable = SortableContainer(props => <Table {...props} />);
+
+const SortableRow = SortableElement(props => defaultTableRowRenderer(props));
+
+const sortableRowRenderer = props => {
+  return <SortableRow {...props} />;
+};
 
 const UoM = ['each', 'g', 'I'];
 const icons = ['fas fa-seedling', 'fab fa-pagelines', 'fas fa-tree', 'fas fa-oil-can'];
@@ -42,30 +69,67 @@ class ProductTable extends React.Component {
 
     this.state = {
       sortBy: 'packageLabel',
-      sortDirection: SortDirection.DESC,
-      sortedList: []
+      // sortDirection: SortDirection.DESC,
+      sortedList: [],
+      checkedItems: {},
+      dataKeys: 0
     };
 
     this._renderDistributor = this._renderDistributor.bind(this);
     this._renderAssign = this._renderAssign.bind(this);
     this._sort = this._sort.bind(this);
+    this._handleChange = this._handleChange.bind(this);
+    this._rowRenderer = this._rowRenderer.bind(this);
+    this._getItem = this._getItem.bind(this);
   }
+
+  // componentWillUpdate(prevProps, prevState) {
+  //   if (this.state.checkedItems !== prevState.checkedItems) {
+  //     console.log('Hello');
+  //   }
+  // }
 
   componentDidMount() {
-    this.setState({ sortedList: list });
+    let checkedItems = this.state.checkedItems;
+    list.forEach(item => {
+      checkedItems[item.packageLabel] = false;
+    });
+    this.setState({ sortedList: list, checkedItems: checkedItems });
   }
 
-  _renderDistributor(data = TableCellProps) {
-    const { distributor, productName, icon } = data.rowData;
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (this.props.sortOrder !== prevProps.sortOrder) {
+  //     console.log('hello');
+  //     this.tableRef.forceUpdateGrid();
+  //   }
+  // }
 
+  _renderDistributor(data = TableCellProps) {
+    const { distributor, productName, icon, packageLabel } = data.rowData;
+    return (
+      <div data-key="0">
+        <Checkbox
+          name={packageLabel}
+          checked={this.state.checkedItems[packageLabel]}
+          onChange={this._handleChange}
+        />
+        <div>
+          <p className="distributor">
+            <i className={icon} style={{ float: 'left', fontSize: '20px', paddingTop: '3px' }}></i>
+            <span id="distName">{distributor}</span>
+            <br></br>
+            {productName}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  _renderUnits(data = TableCellProps) {
+    const { units } = data.rowData;
     return (
       <div>
-        <p className="distributor">
-          <i className={icon} style={{ float: 'left', fontSize: '20px', paddingTop: '5px' }}></i>
-          <span id="distName">{distributor}</span>
-          <br></br>
-          {productName}
-        </p>
+        <input type="text" placeholder={units} style={{ width: '35px' }} />
       </div>
     );
   }
@@ -74,8 +138,8 @@ class ProductTable extends React.Component {
     const { action } = data.rowData;
     return (
       <div>
-        <i class="fas fa-sort" style={{ paddingRight: '20px' }}></i>
-        <i class={action} style={{ paddingRight: '10px' }}></i>
+        <i className="fas fa-sort" style={{ paddingRight: '20px' }}></i>
+        <i className={action} style={{ paddingRight: '10px' }}></i>
       </div>
     );
   }
@@ -88,29 +152,73 @@ class ProductTable extends React.Component {
     this.setState({ sortBy, sortDirection, sortedList });
   }
 
+  _handleChange(e) {
+    let item = e.target.name;
+    let isChecked = e.target.checked;
+    let prevCheckedItems = this.state.checkedItems;
+    prevCheckedItems.item = isChecked;
+    this.setState({ checkedItems: prevCheckedItems });
+    (() => {
+      this.tableRef.forceUpdateGrid();
+    })();
+    // console.log(this.tableRef.forceUpdateGrid());
+  }
+
+  // _rowRenderer(props) {
+  //   var style = '';
+  //   if (this.state.dataKeys > -1 && this.state.dataKeys < 3) {
+  //     this.state.dataKeys++;
+  //   } else {
+  //     this.state.dataKeys = 0;
+  //   }
+  //   var temp = this.state.dataKeys.toString();
+  //   if (temp === '0') {
+  //     style = 'border-one';
+  //   } else if (temp === '1') {
+  //     style = 'border-two';
+  //   } else if (temp === '2') {
+  //     style = 'border-three';
+  //   } else {
+  //     style = 'border-four';
+  //   }
+  //   return (
+  //     <div key={props.key} className={style} data-key={this.state.dataKeys}>
+  //       {defaultTableRowRenderer(props)}
+  //     </div>
+  //   );
+  // }
+
+  _rowRenderer(props) {
+    return defaultTableRowRenderer(props);
+  }
   render() {
     return (
       <div className="container">
         <h1>Treez, Inc</h1>
         <AutoSizer>
           {({ width }) => (
-            <Table
-              rowClassName="table-row"
+            <SortableTable
+              {...this.props}
+              handleChange={this._handleChange}
+              rowRenderer={sortableRowRenderer}
+              ref={ref => (this.tableRef = ref)}
+              className="table-row"
               headerHeight={40}
               width={width}
               height={500}
               rowHeight={60}
               rowCount={this.state.sortedList.length}
-              rowGetter={({ index }) => this.state.sortedList[index]}
+              rowGetter={this._getItem}
               sort={this._sort}
               sortBy={this.state.sortBy}
               sortDirection={this.state.sortDirection}
+              rowStyle={{}}
             >
               <Column
                 dataKey="distributor"
                 label="Distributor"
                 cellRenderer={this._renderDistributor}
-                width={width * 0.55}
+                width={width * 0.6}
               />
               <Column width={width * 0.15} label="Size" dataKey="size" />
               <Column width={width * 0.15} label="UoM" dataKey="uom" />
@@ -124,7 +232,12 @@ class ProductTable extends React.Component {
               <Column width={width * 0.3} label="Fees" dataKey="fees" />
               <Column width={width * 0.3} label="Price" dataKey="price" />
               <Column width={width * 0.3} label="Base Cost" dataKey="baseCost" />
-              <Column width={width * 0.2} label="Units" dataKey="units" />
+              <Column
+                width={width * 0.2}
+                label="Units"
+                dataKey="units"
+                cellRenderer={this._renderUnits}
+              />
               <Column width={width * 0.35} label="Total Cost" dataKey="totalCost" />
               <Column
                 width={width * 0.2}
@@ -132,11 +245,19 @@ class ProductTable extends React.Component {
                 dataKey="action"
                 cellRenderer={this._renderAssign}
               />
-            </Table>
+            </SortableTable>
           )}
         </AutoSizer>
       </div>
     );
+  }
+
+  _getItem(info) {
+    const rows = this.state.sortedList;
+
+    const row = rows[info.index];
+
+    return row;
   }
 }
 
