@@ -35,31 +35,6 @@ const UoM = ['each', 'g', 'I'];
 const icons = ['fas fa-seedling', 'fab fa-pagelines', 'fas fa-tree', 'fas fa-oil-can'];
 
 // Generate a random integer to use for dummy data
-function getRandomInt(max) {
-  return Math.floor(Math.random() * Math.floor(max));
-}
-
-// Generate an object containing our dummyData
-const generateRandomItem = idx => ({
-  distributor: 'Eden Extracts',
-  productName: faker.commerce.productName(),
-  size: 3.5,
-  uom: UoM[getRandomInt(3)],
-  packageLabel: getRandomInt(5000000000),
-  discount: '$' + faker.commerce.price(),
-  fees: '$' + faker.commerce.price(),
-  price: '$' + faker.commerce.price(),
-  baseCost: '$' + faker.commerce.price(),
-  units: getRandomInt(300),
-  totalCost: '$60,000',
-  icon: icons[getRandomInt(4)],
-  action: 'fas fa-ellipsis-v'
-});
-
-let list = [];
-for (let i = 0, l = 10; i < l; i++) {
-  list.push(generateRandomItem(i));
-}
 
 class ProductTable extends React.Component {
   constructor(props, context) {
@@ -69,7 +44,7 @@ class ProductTable extends React.Component {
 
     this.state = {
       sortBy: 'packageLabel',
-      // sortDirection: SortDirection.DESC,
+      sortDirection: SortDirection.DESC,
       sortedList: [],
       checkedItems: {},
       dataKeys: 0
@@ -81,20 +56,51 @@ class ProductTable extends React.Component {
     this._handleChange = this._handleChange.bind(this);
     this._rowRenderer = this._rowRenderer.bind(this);
     this._getItem = this._getItem.bind(this);
+    this._getDefaultItems = this._getDefaultItems.bind(this);
+    this._getDefaultCheckedItems = this._getDefaultCheckedItems.bind(this);
   }
 
-  // componentWillUpdate(prevProps, prevState) {
-  //   if (this.state.checkedItems !== prevState.checkedItems) {
-  //     console.log('Hello');
-  //   }
-  // }
-
   componentDidMount() {
-    let checkedItems = this.state.checkedItems;
+    const list = this._getDefaultItems();
+    const checkedItems = this._getDefaultCheckedItems(list);
+    this.setState({ sortedList: list, checkedItems: checkedItems });
+  }
+
+  _getDefaultCheckedItems(list) {
+    const checkedItems = this.state.checkedItems;
     list.forEach(item => {
       checkedItems[item.packageLabel] = false;
     });
-    this.setState({ sortedList: list, checkedItems: checkedItems });
+    return checkedItems;
+  }
+
+  _getDefaultItems() {
+    function getRandomInt(max) {
+      return Math.floor(Math.random() * Math.floor(max));
+    }
+
+    // Generate an object containing our dummyData
+    const generateRandomItem = idx => ({
+      distributor: 'Eden Extracts',
+      productName: faker.commerce.productName(),
+      size: 3.5,
+      uom: UoM[getRandomInt(3)],
+      packageLabel: getRandomInt(5000000000),
+      discount: '$' + faker.commerce.price(),
+      fees: '$' + faker.commerce.price(),
+      price: '$' + faker.commerce.price(),
+      baseCost: '$' + faker.commerce.price(),
+      units: getRandomInt(300),
+      totalCost: '$60,000',
+      icon: icons[getRandomInt(4)],
+      action: 'fas fa-ellipsis-v'
+    });
+
+    let list = [];
+    for (let i = 0, l = 10; i < l; i++) {
+      list.push(generateRandomItem(i));
+    }
+    return list;
   }
 
   // componentDidUpdate(prevProps, prevState) {
@@ -145,10 +151,10 @@ class ProductTable extends React.Component {
   }
 
   _sort({ sortBy, sortDirection }) {
-    let sortedList = list.sort((a, b) => {
+    let sortedList = this.state.sortedList.sort((a, b) => {
       return a.packageLabel - b.packageLabel;
     });
-    sortedList = sortDirection === SortDirection.DESC ? list.reverse() : list;
+    sortedList = sortDirection === SortDirection.DESC ? sortedList.reverse() : sortedList;
     this.setState({ sortBy, sortDirection, sortedList });
   }
 
