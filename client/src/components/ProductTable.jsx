@@ -31,9 +31,6 @@ const sortableRowRenderer = props => {
   return <SortableRow {...props} />;
 };
 
-const UoM = ['each', 'g', 'I'];
-const icons = ['fas fa-seedling', 'fab fa-pagelines', 'fas fa-tree', 'fas fa-oil-can'];
-
 // Generate a random integer to use for dummy data
 
 class ProductTable extends React.Component {
@@ -41,7 +38,6 @@ class ProductTable extends React.Component {
     super(props, context);
 
     // Generate a list of of objects containing our dummy data
-
     this.state = {
       sortBy: 'packageLabel',
       sortDirection: SortDirection.DESC,
@@ -75,9 +71,12 @@ class ProductTable extends React.Component {
   }
 
   _getDefaultItems() {
-    function getRandomInt(max) {
+    let list = [];
+    const UoM = ['each', 'g', 'I'];
+    const icons = ['fas fa-seedling', 'fab fa-pagelines', 'fas fa-tree', 'fas fa-oil-can'];
+    const getRandomInt = max => {
       return Math.floor(Math.random() * Math.floor(max));
-    }
+    };
 
     // Generate an object containing our dummyData
     const generateRandomItem = idx => ({
@@ -96,19 +95,11 @@ class ProductTable extends React.Component {
       action: 'fas fa-ellipsis-v'
     });
 
-    let list = [];
     for (let i = 0, l = 10; i < l; i++) {
       list.push(generateRandomItem(i));
     }
     return list;
   }
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (this.props.sortOrder !== prevProps.sortOrder) {
-  //     console.log('hello');
-  //     this.tableRef.forceUpdateGrid();
-  //   }
-  // }
 
   _renderDistributor(data = TableCellProps) {
     const { distributor, productName, icon, packageLabel } = data.rowData;
