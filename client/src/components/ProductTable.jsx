@@ -43,17 +43,19 @@ class ProductTable extends React.Component {
       sortDirection: SortDirection.DESC,
       sortedList: [],
       checkedItems: {},
+      rowData: {},
       dataKeys: 0
     };
 
     this._renderDistributor = this._renderDistributor.bind(this);
     this._renderAssign = this._renderAssign.bind(this);
     this._sort = this._sort.bind(this);
-    this._handleChange = this._handleChange.bind(this);
+    this._handleCheckboxChange = this._handleCheckboxChange.bind(this);
     this._rowRenderer = this._rowRenderer.bind(this);
     this._getItem = this._getItem.bind(this);
     this._getDefaultItems = this._getDefaultItems.bind(this);
     this._getDefaultCheckedItems = this._getDefaultCheckedItems.bind(this);
+    this._handleInputChange = this._handleInputChange.bind(this);
   }
 
   componentDidMount() {
@@ -108,7 +110,7 @@ class ProductTable extends React.Component {
         <Checkbox
           name={packageLabel}
           checked={this.state.checkedItems[packageLabel]}
-          onChange={this._handleChange}
+          onChange={this._handleCheckboxChange}
         />
         <div>
           <p className="distributor">
@@ -123,10 +125,25 @@ class ProductTable extends React.Component {
   }
 
   _renderUnits(data = TableCellProps) {
-    const { units } = data.rowData;
+    const { units, packageLabel, key, rowIndex, style } = data.rowData;
+
     return (
       <div>
-        <input type="text" placeholder={units} style={{ width: '35px' }} />
+        <input
+          key={key}
+          type="text"
+          onChange={event => {
+            this.setState({
+              rowData: {
+                ...rowData,
+                [packageLabel]: event.target.value
+              }
+            });
+          }}
+          placeholder={units}
+          name={packageLabel}
+          style={style}
+        />
       </div>
     );
   }
@@ -149,7 +166,7 @@ class ProductTable extends React.Component {
     this.setState({ sortBy, sortDirection, sortedList });
   }
 
-  _handleChange(e) {
+  _handleCheckboxChange(e) {
     let item = e.target.name;
     let isChecked = e.target.checked;
     let prevCheckedItems = this.state.checkedItems;
@@ -159,6 +176,15 @@ class ProductTable extends React.Component {
       this.tableRef.forceUpdateGrid();
     })();
     // console.log(this.tableRef.forceUpdateGrid());
+  }
+
+  _handleInputChange(e) {
+    console.log('hi');
+    var value = e.target.value;
+    const name = e.target.name;
+    var newState = Object.assign(this.state.rowData);
+    newState[`${name}`] = value;
+    this.setState(newState);
   }
 
   // _rowRenderer(props) {
@@ -195,8 +221,8 @@ class ProductTable extends React.Component {
         <AutoSizer>
           {({ width }) => (
             <SortableTable
-              {...this.props}
-              handleChange={this._handleChange}
+              {...this.state}
+              handleChange={this._handleCheckboxChange}
               rowRenderer={sortableRowRenderer}
               ref={ref => (this.tableRef = ref)}
               className="table-row"
