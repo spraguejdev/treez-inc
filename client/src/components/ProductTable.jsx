@@ -162,6 +162,7 @@ class ProductTable extends React.Component {
               width={width}
               height={500}
               rowHeight={60}
+              headerHeight={60}
               rowCount={this.state.sortedList.length}
               rowGetter={this._getItem}
               sort={this._sort}
