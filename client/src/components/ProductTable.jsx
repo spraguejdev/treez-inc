@@ -5,24 +5,13 @@ import {
   Column,
   Index,
   Table,
-  TableProps,
-  TableRowProps,
-  WindowScroller,
   defaultTableRowRenderer,
   SortDirection
 } from 'react-virtualized';
-
-import {
-  SortableContainer,
-  SortableElement,
-  SortEnd,
-  SortEndHandler,
-  SortEvent
-} from 'react-sortable-hoc';
-
+import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import Checkbox from './Checkbox.jsx';
-import { defaultRowRenderer } from 'react-virtualized/dist/commonjs/Table';
 
+// Initialize react-sortable-hox
 const SortableTable = SortableContainer(props => <Table {...props} />);
 
 const SortableRow = SortableElement(props => defaultTableRowRenderer(props));
@@ -30,8 +19,6 @@ const SortableRow = SortableElement(props => defaultTableRowRenderer(props));
 const sortableRowRenderer = props => {
   return <SortableRow {...props} />;
 };
-
-// Generate a random integer to use for dummy data
 
 class ProductTable extends React.Component {
   constructor(props, context) {
@@ -42,31 +29,21 @@ class ProductTable extends React.Component {
       sortBy: 'packageLabel',
       sortDirection: SortDirection.DESC,
       sortedList: [],
-      checkedItems: {},
-      rowData: {},
       dataKeys: 0
     };
 
-    this._renderDistributor = this._renderDistributor.bind(this);
-    this._renderAssign = this._renderAssign.bind(this);
+    this._renderDistributorColumn = this._renderDistributorColumn.bind(this);
+    this._renderUnitsColumn = this._renderUnitsColumn.bind(this);
+    this._renderAssignColumn = this._renderAssignColumn.bind(this);
     this._sort = this._sort.bind(this);
     this._rowRenderer = this._rowRenderer.bind(this);
+    this._headerRowRenderer = this._headerRowRenderer.bind(this);
     this._getItem = this._getItem.bind(this);
-    this._handleCheckboxChange = this._handleCheckboxChange.bind(this);
   }
 
   componentDidMount() {
     const list = this._getDefaultItems();
-    const checkedItems = this._getDefaultCheckedItems(list);
-    this.setState({ sortedList: list, checkedItems: checkedItems });
-  }
-
-  _getDefaultCheckedItems(list) {
-    const checkedItems = this.state.checkedItems;
-    list.forEach(item => {
-      checkedItems[item.packageLabel] = false;
-    });
-    return checkedItems;
+    this.setState({ sortedList: list });
   }
 
   _getDefaultItems() {
@@ -94,21 +71,18 @@ class ProductTable extends React.Component {
       action: 'fas fa-ellipsis-v'
     });
 
-    for (let i = 0, l = 10; i < l; i++) {
+    for (let i = 0, l = 1000; i < l; i++) {
       list.push(generateRandomItem(i));
     }
     return list;
   }
 
-  _renderDistributor(data = TableCellProps) {
+  _renderDistributorColumn(data = TableCellProps) {
     const { distributor, productName, icon, packageLabel } = data.rowData;
+
     return (
       <div data-key="0">
-        <Checkbox
-          name={packageLabel}
-          checked={this.state.checkedItems[packageLabel]}
-          onChange={this._handleCheckboxChange}
-        />
+        <Checkbox style="checkbox-row-style" name={packageLabel} />
         <div>
           <p className="distributor">
             <i className={icon} style={{ float: 'left', fontSize: '20px', paddingTop: '3px' }}></i>
@@ -121,7 +95,7 @@ class ProductTable extends React.Component {
     );
   }
 
-  _renderUnits(data = TableCellProps) {
+  _renderUnitsColumn(data = TableCellProps) {
     const { units, packageLabel, key, style } = data.rowData;
     const index = data.rowIndex;
     let rowData = data.parent.props.sortedList[index];
@@ -136,18 +110,26 @@ class ProductTable extends React.Component {
           }}
           placeholder={units}
           name={packageLabel}
-          style={style}
         />
       </div>
     );
   }
 
-  _renderAssign(data = TableCellProps) {
+  _renderAssignColumn(data = TableCellProps) {
     const { action } = data.rowData;
     return (
       <div>
         <i className="fas fa-sort" style={{ paddingRight: '20px' }}></i>
         <i className={action} style={{ paddingRight: '10px' }}></i>
+      </div>
+    );
+  }
+
+  _headerRowRenderer(props) {
+    const { className, columns, style } = props;
+    return (
+      <div className={className} role="row" style={style}>
+        {columns}
       </div>
     );
   }
@@ -160,45 +142,10 @@ class ProductTable extends React.Component {
     this.setState({ sortBy, sortDirection, sortedList });
   }
 
-  _handleCheckboxChange(e) {
-    let item = e.target.name;
-    let isChecked = e.target.checked;
-    let prevCheckedItems = this.state.checkedItems;
-    prevCheckedItems.item = isChecked;
-    this.setState({ checkedItems: prevCheckedItems });
-    (() => {
-      // this.tableRef.forceUpdateGrid();
-    })();
-    // console.log(this.tableRef.forceUpdateGrid());
-  }
-
-  // _rowRenderer(props) {
-  //   var style = '';
-  //   if (this.state.dataKeys > -1 && this.state.dataKeys < 3) {
-  //     this.state.dataKeys++;
-  //   } else {
-  //     this.state.dataKeys = 0;
-  //   }
-  //   var temp = this.state.dataKeys.toString();
-  //   if (temp === '0') {
-  //     style = 'border-one';
-  //   } else if (temp === '1') {
-  //     style = 'border-two';
-  //   } else if (temp === '2') {
-  //     style = 'border-three';
-  //   } else {
-  //     style = 'border-four';
-  //   }
-  //   return (
-  //     <div key={props.key} className={style} data-key={this.state.dataKeys}>
-  //       {defaultTableRowRenderer(props)}
-  //     </div>
-  //   );
-  // }
-
   _rowRenderer(props) {
     return defaultTableRowRenderer(props);
   }
+
   render() {
     return (
       <div className="container">
@@ -225,33 +172,41 @@ class ProductTable extends React.Component {
               <Column
                 dataKey="distributor"
                 label="Distributor"
-                cellRenderer={this._renderDistributor}
+                cellRenderer={this._renderDistributorColumn}
                 width={width * 0.6}
+                disableSort={true}
               />
-              <Column width={width * 0.15} label="Size" dataKey="size" />
-              <Column width={width * 0.15} label="UoM" dataKey="uom" />
+              <Column width={width * 0.15} label="Size" dataKey="size" disableSort={true} />
+              <Column width={width * 0.15} label="UoM" dataKey="uom" disableSort={true} />
               <Column
                 width={width * 0.55}
                 label="Package Label"
                 dataKey="packageLabel"
                 disableSort={false}
               />
-              <Column width={width * 0.3} label="Discount" dataKey="discount" />
-              <Column width={width * 0.3} label="Fees" dataKey="fees" />
-              <Column width={width * 0.3} label="Price" dataKey="price" />
-              <Column width={width * 0.3} label="Base Cost" dataKey="baseCost" />
+              <Column width={width * 0.3} label="Discount" dataKey="discount" disableSort={true} />
+              <Column width={width * 0.3} label="Fees" dataKey="fees" disableSort={true} />
+              <Column width={width * 0.3} label="Price" dataKey="price" disableSort={true} />
+              <Column width={width * 0.3} label="Base Cost" dataKey="baseCost" disableSort={true} />
               <Column
                 width={width * 0.2}
                 label="Units"
                 dataKey="units"
-                cellRenderer={this._renderUnits}
+                cellRenderer={this._renderUnitsColumn}
+                disableSort={true}
               />
-              <Column width={width * 0.35} label="Total Cost" dataKey="totalCost" />
+              <Column
+                width={width * 0.35}
+                label="Total Cost"
+                dataKey="totalCost"
+                disableSort={true}
+              />
               <Column
                 width={width * 0.2}
                 label="Action"
                 dataKey="action"
-                cellRenderer={this._renderAssign}
+                cellRenderer={this._renderAssignColumn}
+                disableSort={true}
               />
             </SortableTable>
           )}
