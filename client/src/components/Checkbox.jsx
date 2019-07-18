@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Checkbox = ({ type = 'checkbox', name, checked = 'false', isSelected = true, onChange }) => (
+const Checkbox = ({ type = 'checkbox', name, isSelected = true, onChange }) => (
   <span
     style={{
       float: 'left',
@@ -9,7 +9,7 @@ const Checkbox = ({ type = 'checkbox', name, checked = 'false', isSelected = tru
       paddingRight: '10px'
     }}
   >
-    <input type={type} name={name} checked={checked} onChange={onChange} />
+    <input type={type} name={name} id={name} onChange={onChange} />
   </span>
 );
 
