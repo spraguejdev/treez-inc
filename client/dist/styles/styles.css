@@ -131,7 +131,12 @@ body {
   border-radius: 4px;
 }
 
-.ReactVirtualized__Table__row:nth-of-type(2n) {
+/* .ReactVirtualized__Table__row:nth-of-type(odd) {
+  border-top: 1px solid #c4c4c4;
+  border-left: 7px solid rgba(22, 21, 21, 0.8);
+  border-radius: 4px;
+} */
+.ReactVirtualized__Table__row:nth-of-type(even) {
   border-top: 1px solid #c4c4c4;
   border-left: 7px solid rgba(22, 39, 192, 0.8);
   border-radius: 4px;
@@ -141,12 +146,12 @@ body {
   border-left: 7px solid rgba(4, 136, 4, 0.8);
   border-radius: 4px;
 }
-.ReactVirtualized__Table__row:nth-of-type(4n) {
+/* .ReactVirtualized__Table__row:nth-of-type(4n) {
   border-top: 1px solid #c4c4c4;
   border-left: 7px solid rgba(216, 161, 8, 0.8);
 
   border-radius: 4px;
-}
+} */
 
 .border-one {
   border-top: 1px solid #c4c4c4;
@@ -157,11 +162,6 @@ body {
 .border-two {
   border-top: 1px solid #c4c4c4;
   border-left: 7px solid red(22, 39, 192, 0.8);
-  border-radius: 4px;
-}
-.ReactVirtualized__Table__row:nth-of-type(4n) {
-  border-top: 1px solid #c4c4c4;
-  border-left: 7px solid rgba(22, 21, 21, 0.8);
   border-radius: 4px;
 }
 
@@ -193,6 +193,25 @@ input[type='checkbox'] {
   transform: scale(1.25);
 }
 
+input[type='text'] {
+  border: 1px solid #c4c4c4;
+  height: 20px;
+  border-radius: 2px;
+  text-align: center;
+  size: 12px;
+  -webkit-transition: width 0.4s ease-in-out;
+  transition: width 0.4s ease-in-out;
+  width: 45px;
+}
+
+input::placeholder {
+  font-size: 14px;
+}
+
+input[type='text']:focus {
+  width: 55px;
+}
+
 .table-row {
   padding: 15px;
 }
@@ -206,42 +225,16 @@ input[type='checkbox'] {
   overflow: hidden;
   padding-right: 15px;
 }
-/* 
-.ReactVirtualized__Table__row:nth-of-type(2n + 1) {
-  border-top: 1px solid #c4c4c4;
-  border-left: 7px solid rgba(4, 136, 4, 0.8);
-  border-radius: 4px;
+
+.checkbox-row-style {
+  float: 'left';
+  display: 'inline';
+  padding-top: '4px';
+  padding-right: '10px';
 }
-.ReactVirtualized__Table__row {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  text-align: center;
+
+.checkbox-header-style {
+  float: 'left';
+  display: 'inline';
+  padding-top: '4px';
 }
-user agent stylesheet
-div {
-  display: block;
-}
-Style Attribute {
-  box-sizing: border-box;
-  direction: ltr;
-  height: 460px;
-  position: relative;
-  width: 1243px;
-  will-change: transform;
-  overflow: hidden auto;
-}
-body {
-  background: #f5f5f5;
-  color: rgb(49, 49, 39);
-  display: flex;
-  min-height: 100%;
-  font-size: 14px;
-} */
