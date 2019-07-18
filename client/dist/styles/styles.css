@@ -125,39 +125,56 @@ body {
 .table-row {
 }
 
-.ReactVirtualized__Table__row:nth-child(1n) {
+.ReactVirtualized__Table__row {
   border-top: 1px solid #c4c4c4;
   border-left: 7px solid rgba(4, 136, 4, 0.8);
   border-radius: 4px;
 }
-.ReactVirtualized__Table__row:nth-child(2n) {
+
+/* .ReactVirtualized__Table__row:nth-of-type(odd) {
+  border-top: 1px solid #c4c4c4;
+  border-left: 7px solid rgba(22, 21, 21, 0.8);
+  border-radius: 4px;
+} */
+.ReactVirtualized__Table__row:nth-of-type(even) {
   border-top: 1px solid #c4c4c4;
   border-left: 7px solid rgba(22, 39, 192, 0.8);
   border-radius: 4px;
 }
-.ReactVirtualized__Table__row:nth-child(3n) {
+.ReactVirtualized__Table__row:nth-of-type(2n + 1) {
+  border-top: 1px solid #c4c4c4;
+  border-left: 7px solid rgba(4, 136, 4, 0.8);
+  border-radius: 4px;
+}
+/* .ReactVirtualized__Table__row:nth-of-type(4n) {
   border-top: 1px solid #c4c4c4;
   border-left: 7px solid rgba(216, 161, 8, 0.8);
+
   border-radius: 4px;
-}
-.ReactVirtualized__Table__row:nth-child(4n) {
+} */
+
+.border-one {
   border-top: 1px solid #c4c4c4;
-  border-left: 7px solid rgba(22, 21, 21, 0.8);
+  border-left: 7px solid rgba(22, 39, 192, 0.8);
   border-radius: 4px;
 }
+
+.border-two {
+  border-top: 1px solid #c4c4c4;
+  border-left: 7px solid red(22, 39, 192, 0.8);
+  border-radius: 4px;
+}
+
 .ReactVirtualized__Table__headerRow {
   border-top: 1px solid #c4c4c4;
   color: #272727;
   border-left: 7px solid #f5f5f5;
 }
-/* 
-.ReactVirtualized__Table__row:before {
-  content: url('marijuana1.png');
-}
 
-.ReactVirtualized__Table__headerRow:before {
-  content: url('marijuana1.png');
-} */
+.ReactVirtualized__Table__row:hover {
+  color: #1d1b1b;
+  background: #dcdcdc;
+}
 
 .distributor {
   font-size: 12px;
@@ -165,4 +182,59 @@ body {
 
 #distName {
   font-weight: 600;
+}
+
+input[type='checkbox'] {
+  /* Double-sized Checkboxes */
+  -ms-transform: scale(1.25); /* IE */
+  -moz-transform: scale(1.25); /* FF */
+  -webkit-transform: scale(1.25); /* Safari and Chrome */
+  -o-transform: scale(1.25); /* Opera */
+  transform: scale(1.25);
+}
+
+input[type='text'] {
+  border: 1px solid #c4c4c4;
+  height: 20px;
+  border-radius: 2px;
+  text-align: center;
+  size: 12px;
+  -webkit-transition: width 0.4s ease-in-out;
+  transition: width 0.4s ease-in-out;
+  width: 45px;
+}
+
+input::placeholder {
+  font-size: 14px;
+}
+
+input[type='text']:focus {
+  width: 55px;
+}
+
+.table-row {
+  padding: 15px;
+}
+
+.row-style {
+  height: 60px;
+  left: 0px;
+  position: absolute;
+  top: 0px;
+  width: 1243px;
+  overflow: hidden;
+  padding-right: 15px;
+}
+
+.checkbox-row-style {
+  float: 'left';
+  display: 'inline';
+  padding-top: '4px';
+  padding-right: '10px';
+}
+
+.checkbox-header-style {
+  float: 'left';
+  display: 'inline';
+  padding-top: '4px';
 }
