@@ -18,7 +18,7 @@
 
 ## Usage
 
-> From the root directory of this service, grab dependencies (see below).Nagivate to yor terminal, then use the command npm run react-dev to transpose the es6 files into a bundle using webpack.. Finally, use the command npm start to spin up the server.
+> From the root directory of this service, grab dependencies (see below).Nagivate to yor terminal, then use the command npm run react-dev to transpose the es6 files into a bundle using webpack. Finally, use the command npm start to spin up the server.
 
 - After the above steps, navigate to your favorite web browser and insert the URL localhost:3000 and view the component!
 
