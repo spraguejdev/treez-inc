@@ -50,12 +50,9 @@ class ProductTable extends React.Component {
     this._renderDistributor = this._renderDistributor.bind(this);
     this._renderAssign = this._renderAssign.bind(this);
     this._sort = this._sort.bind(this);
-    this._handleCheckboxChange = this._handleCheckboxChange.bind(this);
     this._rowRenderer = this._rowRenderer.bind(this);
     this._getItem = this._getItem.bind(this);
-    this._getDefaultItems = this._getDefaultItems.bind(this);
-    this._getDefaultCheckedItems = this._getDefaultCheckedItems.bind(this);
-    this._handleInputChange = this._handleInputChange.bind(this);
+    this._handleCheckboxChange = this._handleCheckboxChange.bind(this);
   }
 
   componentDidMount() {
@@ -125,7 +122,9 @@ class ProductTable extends React.Component {
   }
 
   _renderUnits(data = TableCellProps) {
-    const { units, packageLabel, key, rowIndex, style } = data.rowData;
+    const { units, packageLabel, key, style } = data.rowData;
+    const index = data.rowIndex;
+    let rowData = data.parent.props.sortedList[index];
 
     return (
       <div>
@@ -133,12 +132,7 @@ class ProductTable extends React.Component {
           key={key}
           type="text"
           onChange={event => {
-            this.setState({
-              rowData: {
-                ...rowData,
-                [packageLabel]: event.target.value
-              }
-            });
+            rowData.units = event.target.value;
           }}
           placeholder={units}
           name={packageLabel}
@@ -173,18 +167,9 @@ class ProductTable extends React.Component {
     prevCheckedItems.item = isChecked;
     this.setState({ checkedItems: prevCheckedItems });
     (() => {
-      this.tableRef.forceUpdateGrid();
+      // this.tableRef.forceUpdateGrid();
     })();
     // console.log(this.tableRef.forceUpdateGrid());
-  }
-
-  _handleInputChange(e) {
-    console.log('hi');
-    var value = e.target.value;
-    const name = e.target.name;
-    var newState = Object.assign(this.state.rowData);
-    newState[`${name}`] = value;
-    this.setState(newState);
   }
 
   // _rowRenderer(props) {
@@ -277,9 +262,7 @@ class ProductTable extends React.Component {
 
   _getItem(info) {
     const rows = this.state.sortedList;
-
     const row = rows[info.index];
-
     return row;
   }
 }
